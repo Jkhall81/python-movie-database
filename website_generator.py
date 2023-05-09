@@ -1,21 +1,20 @@
 import json
 
-
 def generate_website():
-    """ This function will generate a html page based on the data stored in the data.json
-    file."""
+  """ This function will generate a html page based on the data stored in the data.json
+  file."""
 
-    with open('data.json', 'r') as file:
-        data = json.load(file)
+  with open('data.json', 'r') as file:
+    data = json.load(file)
 
-    with open('_static/index_template.html', 'r') as file:
-        template = file.read()
+  with open('_static/index_template.html', 'r') as file:
+    template = file.read()
 
-    movie_grid = ''
-    for movie_title, movie_data in data.items():
-        rating = movie_data['rating']
-        poster_url = movie_data['poster url']
-        release_year = movie_data['year of release']
+  movie_grid = ''
+  for movie_title, movie_data in data.items():
+    rating = movie_data['rating']
+    poster_url = movie_data['poster url']
+    release_year = movie_data['year of release']
 
     movie_html = f"""
       <li class='movie'>
@@ -27,12 +26,13 @@ def generate_website():
     """
     movie_grid += movie_html
 
-    html = template.replace('__TEMPLATE_MOVIE_GRID__', movie_grid)
+  html = template.replace('__TEMPLATE_MOVIE_GRID__', movie_grid)
 
-    title = 'My Movie App'
-    html = html.replace('__TEMPLATE_TITLE__', title)
+  title = 'My Movie App'
+  html = html.replace('__TEMPLATE_TITLE__', title)
 
-    with open('_static/index.html', 'w')as file:
-        file.write(html)
+  with open('_static/index.html', 'w')as file:
+    file.write(html)
 
-    print('Website was generated successfully')
+  print('Website was generated successfully')
+
