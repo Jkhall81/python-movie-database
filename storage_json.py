@@ -93,3 +93,17 @@ class StorageJson(IStorage):
 
         with open(self.file_path, 'w') as f:
             json.dump(movies, f, indent=4)
+
+    def return_ratings(self):
+
+        with open(self.file_path, 'r') as f:
+            movies = json.load(f)
+
+        ratings_list = []
+
+        for item in movies.values():
+            rating = item.get('rating')
+            if rating is not None:
+                ratings_list.append(int(rating))
+
+        return ratings_list
