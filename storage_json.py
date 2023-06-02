@@ -14,8 +14,7 @@ class StorageJson(IStorage):
         Returns:
             None
         """
-        with open(self.file_path, 'r') as f:
-            movies = json.load(f)
+        movies = self.return_python_data_dict()
 
         number_of_movies = len(movies.keys())
         print(f'There are {number_of_movies} movies in total!')
@@ -45,8 +44,7 @@ class StorageJson(IStorage):
             'poster url': poster
             }
 
-        with open(self.file_path, 'r') as f:
-            movies = json.load(f)
+        movies = self.return_python_data_dict()
         movies[title] = new_obj
         with open(self.file_path, 'w') as f:
             json.dump(movies, f, indent=4)
@@ -61,8 +59,7 @@ class StorageJson(IStorage):
         Returns:
             None
         """
-        with open(self.file_path, 'r') as f:
-            movies = json.load(f)
+        movies = self.return_python_data_dict()
 
         movie_to_delete = input('Which movie would you like to delete? Movie name: ')
         if movies.get(movie_to_delete) is None:
@@ -82,8 +79,7 @@ class StorageJson(IStorage):
             title (str): The title of the movie to update.
             notes (str): The updated notes for the movie
         """
-        with open(self.file_path, 'r') as f:
-            movies = json.load(f)
+        movies = self.return_python_data_dict()
 
         movie_to_check = input('Enter a movie name: ')
         if movies.get(movie_to_check) is None:
@@ -95,9 +91,15 @@ class StorageJson(IStorage):
             json.dump(movies, f, indent=4)
 
     def return_ratings(self):
+        """
+        Retrieves the ratings of all movies from the JSON file and
+        returns them as a list of integers.
 
-        with open(self.file_path, 'r') as f:
-            movies = json.load(f)
+        Returns:
+            list: A list containing the ratings of all movies as
+            integers.
+        """
+        movies = self.return_python_data_dict()
 
         ratings_list = []
 
@@ -107,3 +109,17 @@ class StorageJson(IStorage):
                 ratings_list.append(int(rating))
 
         return ratings_list
+
+    def return_python_data_dict(self):
+        """
+        Loads and returns the Python dictionary representation of
+        the JSON data stored in the filed specified by 'self.file_
+        path'.
+
+        Returns:
+            dict: A Python dictionary containing the JSON data
+            from the specified file.
+        """
+        with open(self.file_path, 'r') as f:
+            movies = json.load(f)
+        return movies
