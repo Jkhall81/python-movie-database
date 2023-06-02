@@ -62,8 +62,7 @@ class MovieApp:
         Selects a random movie from the list and returns its details.
 
         Returns:
-            str: A string containing the details of the randomly selected movie,
-            including its title, rating, and year of release.
+            None
         """
 
         movies = self._storage.return_python_data_dict()
@@ -76,7 +75,7 @@ class MovieApp:
         Prompts the user to enter a movie title for searching.
 
         Returns:
-            str: The title of the movie entered by the user.
+            None
         """
         movies = self._storage.return_python_data_dict()
 
@@ -89,8 +88,22 @@ class MovieApp:
                     )
         print(result_str)
 
-    def movies_sorted_by_rating(self):
-        pass
+    def _command_movies_sorted_by_rating(self):
+        """
+        Sorts and displays the movies, name and year of release, in the database based
+        on their ratings.
+
+        Returns:
+            None
+        """
+        movies = self._storage.return_python_data_dict()
+
+        sorted_list = sorted(movies, key=lambda x: movies[x]['rating'], reverse=True)
+        for movie in sorted_list:
+            print(
+                f'{movie}, Rating: {movies[movie]["rating"]}, '\
+                f'Year of Release: {movies[movie]["year of release"]}'
+            )
 
     def _generate_website(self):
         pass
