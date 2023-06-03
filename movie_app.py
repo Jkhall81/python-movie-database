@@ -9,7 +9,12 @@ class MovieApp:
 
     def _command_list_movies(self):
         movies = self._storage.list_movies()
-        return movies
+        number_of_movies = int(len(movies))
+        print(f'There are {number_of_movies} total!')
+        for title, movie_info in movies.items():
+            rating = movie_info['rating']
+            year_of_release = movie_info['year of release']
+            print(f'{title} - Rating: {rating}, Year of Release: {year_of_release}')
 
     def _command_movie_avg_and_median(self):
         """
@@ -25,10 +30,9 @@ class MovieApp:
         str2 = f'The median rating of movies in the database is {median_rating}.'
         print(str1)
         print(str2)
-        return
 
     def _command_best_and_worst_movies(self):
-        movies = self._storage.return_python_data_dict()
+        movies = self._storage.list_movies()
 
         best_movie = max(movies, key=lambda x: movies[x]['rating'])
         worst_movie = min(movies, key=lambda x: movies[x]['rating'])
@@ -67,7 +71,7 @@ class MovieApp:
             None
         """
 
-        movies = self._storage.return_python_data_dict()
+        movies = self._storage.list_movies()
 
         key, value = random.choice(list(movies.items()))
         print(f'{key}, Rating: {value["rating"]}, Year of Release: {value["year of release"]}')
@@ -79,7 +83,7 @@ class MovieApp:
         Returns:
             None
         """
-        movies = self._storage.return_python_data_dict()
+        movies = self._storage.list_movies()
 
         movie_name = input('Enter part of the movie name: ')
         result_str = ''
@@ -98,7 +102,7 @@ class MovieApp:
         Returns:
             None
         """
-        movies = self._storage.return_python_data_dict()
+        movies = self._storage.list_movies()
 
         sorted_list = sorted(movies, key=lambda x: movies[x]['rating'], reverse=True)
         for movie in sorted_list:
@@ -114,7 +118,7 @@ class MovieApp:
         Returns:
             None
         """
-        movies = self._storage.return_python_data_dict()
+        movies = self._storage.list_movies()
 
         with open('_static/index_template.html', 'r') as file:
             template = file.read()
@@ -155,7 +159,7 @@ class MovieApp:
             None
         """
         movie_title = input('Please enter a movie name! ')
-        movies = self._storage.return_python_data_dict()
+        movies = self._storage.list_movies()
         print(movies[movie_title]['notes'])
 
     def run_stats_functions(self):
@@ -169,7 +173,6 @@ class MovieApp:
         """
         self._command_movie_avg_and_median()
         self._command_best_and_worst_movies()
-        return
 
     def run(self):
         """
@@ -201,8 +204,8 @@ class MovieApp:
             """
 
         print(menu)
-        user_input = int(input('Enter choice (1-10): '))
-        return user_input
+        user_input = input('Enter choice (1-10): ')
+        return int(user_input)
 
     def add_movie_api_call(self):
         """
@@ -217,11 +220,12 @@ class MovieApp:
 
         movie_data = self.api_call(movie_title)
 
-        new_rating = float(movie_data['imdbRating'])
+        new_rating = movie_data['imdbRating']
         new_year = int(movie_data['Year'])
         new_poster_url = movie_data['Poster']
+        notes = movie_data['Plot']
 
-        self._storage.add_movie(movie_title, new_year, new_rating, new_poster_url)
+        self._storage.add_movie(movie_title, new_year, new_rating, new_poster_url, notes)
         print(f'{movie_title} successfully added to database!')
         return
 
@@ -237,8 +241,10 @@ class MovieApp:
         movie_title = input('Enter the name of a movie to update! ')
         movie_data = self.api_call(movie_title)
         notes = movie_data['Plot']
+        poster = movie_data['Poster']
+        rating = movie_data['imdbRating']
 
-        self._storage.update_movie(movie_title, notes)
+        self._storage.update_movie(movie_title, rating, notes, poster)
         print(f'{movie_title} successfully updated!')
 
     def api_call(self, title):
@@ -294,11 +300,8 @@ class MovieApp:
         }
 
         while True:
-            try:
-                user_input = self.run()
-                if user_input == 0:
-                    print('Bye!')
-                    break
-                function_dict[user_input]()
-            except ValueError:
-                print('Invalid input! Please enter a number!')
+            user_input = self.run()
+            if user_input == 0:
+                print('Bye!')
+                break
+            function_dict[user_input]()

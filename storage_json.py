@@ -8,24 +8,20 @@ class StorageJson(IStorage):
 
     def list_movies(self):
         """
-        Retrieve a list of movies from the JSON file and display their
-        names, ratings, and release years.
+        Returns a dictionary of dictionaries that
+        contains the movies information in the database.
+
+        The function loads the information from the JSON or CSV
+        file and returns the data.
 
         Returns:
-            None
+            a dictionary
         """
-        movies = self.return_python_data_dict()
+        with open(self.file_path, 'r') as f:
+            movies = json.load(f)
+        return movies
 
-        number_of_movies = len(movies.keys())
-        print(f'There are {number_of_movies} movies in total!')
-        for item in movies:
-            output = (
-                f'{item}, Rating: {movies[item]["rating"]} '\
-                f'Year of Release: {movies[item]["year of release"]}'
-            )
-            print(output)
-
-    def add_movie(self, title, year, rating, poster):
+    def add_movie(self, title, year, rating, poster, notes):
         """
         Adds a new movie to the JSON file.
 
@@ -34,6 +30,7 @@ class StorageJson(IStorage):
             year (int): The release year of the movie.
             rating (float): The rating of the movie.
             poster (str): the URL or path to the movie poster image.
+            notes (str): the plot of the movie.
 
         Returns:
             None
@@ -41,22 +38,23 @@ class StorageJson(IStorage):
         new_obj = {
             'rating': rating,
             'year of release': year,
-            'poster url': poster
+            'poster url': poster,
+            'notes': notes
             }
 
-        movies = self.return_python_data_dict()
+        movies = self.list_movies()
         movies[title] = new_obj
         with open(self.file_path, 'w') as f:
             json.dump(movies, f, indent=4)
 
-    def delete_movie(self):
+    def delete_movie(self, title):
         """
         Deletes a movie from the JSON file.
 
         Returns:
             None
         """
-        movies = self.return_python_data_dict()
+        movies = self.list_movies()
 
         movie_to_delete = input('Which movie would you like to delete? Movie name: ')
         if movies.get(movie_to_delete) is None:
@@ -68,20 +66,24 @@ class StorageJson(IStorage):
         with open(self.file_path, 'w') as f:
             json.dump(movies, f, indent=4)
 
-    def update_movie(self, title, notes):
+    def update_movie(self, title, rating, notes, poster):
         """
         Updates the notes for a movie in the JSON file.
 
         Args:
             title (str): The title of the movie to update.
-            notes (str): The updated notes for the movie
+            rating (float): The rating of the movie to update.
+            notes (str): The updated notes for the movie.
+            poster (str): The url of the movie poster.
         """
-        movies = self.return_python_data_dict()
+        movies = self.list_movies()
 
         if movies.get(title) is None:
             print('This movie is not present in the database!')
         else:
             movies[title]['notes'] = notes
+            movies[title]['rating'] = rating
+            movies[title]['poster'] = poster
 
         with open(self.file_path, 'w') as f:
             json.dump(movies, f, indent=4)
@@ -95,27 +97,13 @@ class StorageJson(IStorage):
             list: A list containing the ratings of all movies as
             integers.
         """
-        movies = self.return_python_data_dict()
+        movies = self.list_movies()
 
         ratings_list = []
 
         for item in movies.values():
             rating = item.get('rating')
             if rating is not None:
-                ratings_list.append(int(rating))
+                ratings_list.append(float(rating))
 
         return ratings_list
-
-    def return_python_data_dict(self):
-        """
-        Loads and returns the Python dictionary representation of
-        the JSON data stored in the filed specified by 'self.file_
-        path'.
-
-        Returns:
-            dict: A Python dictionary containing the JSON data
-            from the specified file.
-        """
-        with open(self.file_path, 'r') as f:
-            movies = json.load(f)
-        return movies

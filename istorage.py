@@ -5,15 +5,19 @@ class IStorage(ABC):
     @abstractmethod
     def list_movies(self):
         """
-        Retrieve a list of movies from storage.
+        Returns a dictionary of dictionaries that
+        contains the movies information in the database.
+
+        The function loads the information from the JSON or CSV
+        file and returns the data.
 
         Returns:
-            list: A list of movies.
+            a dictionary
         """
         pass
 
     @abstractmethod
-    def add_movie(self, title, year, rating, poster):
+    def add_movie(self, title, year, rating, poster, notes):
         """
         Add a new movie to the storage.
 
@@ -22,6 +26,7 @@ class IStorage(ABC):
             year (int): The release year of the movie.
             rating (float): The rating of the movie.
             poster (str): The URL or path to the movie poster.
+            notes (str): The plot of the movie.
 
         Returns:
             None
@@ -29,7 +34,7 @@ class IStorage(ABC):
         pass
 
     @abstractmethod
-    def delete_movie(self):
+    def delete_movie(self, title):
         """
         Delete a movie from the storage.
 
@@ -39,13 +44,15 @@ class IStorage(ABC):
         pass
 
     @abstractmethod
-    def update_movie(self, title, notes):
+    def update_movie(self, title, rating, notes, poster):
         """
         Update the notes for a movie in the storage.
 
         Args:
             title (str): The title of the movie to update.
+            rating (float): The rating of the movie to update.
             notes (str): The updated notes for the movie.
+            poster (str): The url for the movie poster.
 
         Returns:
             None
