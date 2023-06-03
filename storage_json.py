@@ -49,12 +49,9 @@ class StorageJson(IStorage):
         with open(self.file_path, 'w') as f:
             json.dump(movies, f, indent=4)
 
-    def delete_movie(self, title):
+    def delete_movie(self):
         """
         Deletes a movie from the JSON file.
-
-        Args:
-            title (str): The title of the movie to delete.
 
         Returns:
             None
@@ -81,11 +78,10 @@ class StorageJson(IStorage):
         """
         movies = self.return_python_data_dict()
 
-        movie_to_check = input('Enter a movie name: ')
-        if movies.get(movie_to_check) is None:
+        if movies.get(title) is None:
             print('This movie is not present in the database!')
         else:
-            movies[movie_to_check]['notes'] = notes
+            movies[title]['notes'] = notes
 
         with open(self.file_path, 'w') as f:
             json.dump(movies, f, indent=4)

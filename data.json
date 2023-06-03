@@ -58,5 +58,17 @@
         "rating": 8.7,
         "year of release": 1999,
         "poster url": "https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg"
+    },
+    "Rob Roy": {
+        "rating": 6.9,
+        "year of release": 1995,
+        "poster url": "https://m.media-amazon.com/images/M/MV5BMjE2NTU2ODI0MV5BMl5BanBnXkFtZTcwNTIwODU2NA@@._V1_SX300.jpg",
+        "notes": "In 1713 Scotland, Rob Roy MacGregor is wronged by a nobleman and his nephew, becomes an outlaw in search of revenge while fleeing the Redcoats, and faces charges of being a Jacobite."
+    },
+    "Predator": {
+        "rating": 7.8,
+        "year of release": 1987,
+        "poster url": "https://m.media-amazon.com/images/M/MV5BY2QwYmFmZTEtNzY2Mi00ZWMyLWEwY2YtMGIyNGZjMWExOWEyXkEyXkFqcGdeQXVyNjUwNzk3NDc@._V1_SX300.jpg",
+        "notes": "A team of commandos on a mission in a Central American jungle find themselves hunted by an extraterrestrial warrior."
     }
 }

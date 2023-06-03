@@ -1,6 +1,6 @@
 import statistics
 import random
-import storage_json
+import requests
 
 
 class MovieApp:
@@ -16,15 +16,16 @@ class MovieApp:
         Calculates the average and median ratings of all movies.
 
         Returns:
-            str: A string containing the average rating of all movies.
-            str: A string containing the median rating of all movies.
+            None
         """
         ratings = self._storage.return_ratings()
         average_rating = statistics.mean(ratings)
         median_rating = statistics.median(ratings)
         str1 = f'The average rating of the movies in the database is {average_rating}.'
         str2 = f'The median rating of movies in the database is {median_rating}.'
-        return str1, str2
+        print(str1)
+        print(str2)
+        return
 
     def _command_best_and_worst_movies(self):
         movies = self._storage.return_python_data_dict()
@@ -145,6 +146,18 @@ class MovieApp:
 
         print('Website was generated successfully')
 
+    def _command_show_movie_notes(self):
+        """
+        This function prompts the user to input a movie name, and then pulls up and prints
+        the movie notes for that movie.
+
+        Returns:
+            None
+        """
+        movie_title = input('Please enter a movie name! ')
+        movies = self._storage.return_python_data_dict()
+        print(movies[movie_title]['notes'])
+
     def run_stats_functions(self):
         """
         This function calls the _command_movie_avg_and_median and _command_best_and_worst_movies
@@ -184,11 +197,80 @@ class MovieApp:
             7. Search Movie
             8. Movies Sorted by Rating
             9. Generate Website
+            10. Movie Notes
             """
 
         print(menu)
-        user_input = int(input('Enter choice (1-9): '))
+        user_input = int(input('Enter choice (1-10): '))
         return user_input
+
+    def add_movie_api_call(self):
+        """
+        This function will get a movie name from the user.  Next it will
+        make an api call to get relevant data about the movie.  Finally, it
+        will pass that data into the add_movie function.
+
+        Returns:
+            None
+        """
+        movie_title = input('Please enter a movie name: ')
+
+        movie_data = self.api_call(movie_title)
+
+        new_rating = float(movie_data['imdbRating'])
+        new_year = int(movie_data['Year'])
+        new_poster_url = movie_data['Poster']
+
+        self._storage.add_movie(movie_title, new_year, new_rating, new_poster_url)
+        print(f'{movie_title} successfully added to database!')
+        return
+
+    def movie_update_api_call(self):
+        """
+        This function prompts the user to input a movie name, that is already in the database,
+        and then runs an api call to pull the movie's plot data.  That data is then passed to
+        the update_movie method.
+
+        Returns:
+             None
+        """
+        movie_title = input('Enter the name of a movie to update! ')
+        movie_data = self.api_call(movie_title)
+        notes = movie_data['Plot']
+
+        self._storage.update_movie(movie_title, notes)
+        print(f'{movie_title} successfully updated!')
+
+    def api_call(self, title):
+        """
+        This function makes an API call to retrieve data for a movie with the given title.
+
+        Args:
+            title (str): The title of the movie to retrieve data for.
+
+        Returns:
+            dict: A dictionary containing the movie data from the API.
+        """
+        api_key = '3c3d7378'
+        api_url = f'http://www.omdbapi.com/?i=tt3896198&apikey={api_key}&t={title}'
+
+        try:
+            response = requests.get(api_url)
+
+            if response.status_code != 200:
+                print(f'Error: {response.text}')
+                return
+            movie_data = response.json()
+
+        except requests.exceptions.RequestException as e:
+            print(f'Error: {e}')
+            return
+
+        if movie_data['Response'] == 'False':
+            print(f'Movie "{title}" not found!')
+            return
+
+        return movie_data
 
     def user_interaction(self):
         """
@@ -200,19 +282,23 @@ class MovieApp:
         """
         function_dict = {
             1: self._command_list_movies,
-            2: storage_json.StorageJson.add_movie,
-            3: storage_json.StorageJson.delete_movie,
-            4: storage_json.StorageJson.update_movie,
+            2: self.add_movie_api_call,
+            3: self._storage.delete_movie,
+            4: self.movie_update_api_call,
             5: self.run_stats_functions,
             6: self._command_random_movie,
             7: self._command_search_movie,
             8: self._command_movies_sorted_by_rating,
-            9: self._generate_website
+            9: self._generate_website,
+            10: self._command_show_movie_notes
         }
 
         while True:
-            user_input = self.run()
-            if user_input == 0:
-                print('Bye!')
-                break
-            function_dict[user_input]()
+            try:
+                user_input = self.run()
+                if user_input == 0:
+                    print('Bye!')
+                    break
+                function_dict[user_input]()
+            except ValueError:
+                print('Invalid input! Please enter a number!')

@@ -29,12 +29,9 @@ class IStorage(ABC):
         pass
 
     @abstractmethod
-    def delete_movie(self, title):
+    def delete_movie(self):
         """
         Delete a movie from the storage.
-
-        Args:
-            title (str): The title of the movie to delete.
 
         Returns:
             None
