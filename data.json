@@ -6,9 +6,16 @@
         "notes": "In 1713 Scotland, Rob Roy MacGregor is wronged by a nobleman and his nephew, becomes an outlaw in search of revenge while fleeing the Redcoats, and faces charges of being a Jacobite.",
         "poster": "https://m.media-amazon.com/images/M/MV5BMjE2NTU2ODI0MV5BMl5BanBnXkFtZTcwNTIwODU2NA@@._V1_SX300.jpg"
     },
+    "Trainspotting": {
+        "rating": "8.1",
+        "year of release": 1996,
+        "poster url": "https://m.media-amazon.com/images/M/MV5BMzA5Zjc3ZTMtMmU5YS00YTMwLWI4MWUtYTU0YTVmNjVmODZhXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg",
+        "notes": "Renton, deeply immersed in the Edinburgh drug scene, tries to clean up and get out, despite the allure of the drugs and influence of friends."
+    },
     "Batman": {
-        "rating": "7.5",
+        "rating": 7.6,
         "year of release": 1989,
-        "poster url": "https://m.media-amazon.com/images/M/MV5BMTYwNjAyODIyMF5BMl5BanBnXkFtZTYwNDMwMDk2._V1_SX300.jpg"
+        "poster url": "https://m.media-amazon.com/images/M/MV5BMTYwNjAyODIyMF5BMl5BanBnXkFtZTYwNDMwMDk2._V1_SX300.jpg",
+        "notes": "The Dark Knight of Gotham City begins his war on crime with his first major enemy being Jack Napier, a criminal who becomes the clownishly homicidal Joker."
     }
 }

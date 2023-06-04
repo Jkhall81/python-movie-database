@@ -21,23 +21,21 @@ class StorageCsv(IStorage):
             reader = csv.reader(file)
             for row in reader:
                 title = row[0]
-                rating = float(row[2])
                 year = int(row[1])
+                rating = float(row[2])
                 poster = row[3]
                 notes = row[4]
 
-                movie_info = {
+                movies[title] = {
                     'rating': rating,
                     'year of release': year,
                     'poster url': poster,
                     'notes': notes
                 }
 
-                movies[title] = movie_info
-
         return movies
 
-    def add_movie(self, title, rating, year, poster, notes):
+    def add_movie(self, title, year, rating, poster, notes):
         """
         Adds a new movie to the CSV file.
 
@@ -51,10 +49,13 @@ class StorageCsv(IStorage):
         Returns:
             None
         """
+        if isinstance(year, str):
+            year = int(year)
+
         movie = {
             'title': title,
-            'rating': rating,
             'year of release': year,
+            'rating': rating,
             'poster url': poster,
             'notes': notes
         }
@@ -75,28 +76,36 @@ class StorageCsv(IStorage):
         """
         movies = self.list_movies()
 
+        data = []
+
         if title in movies:
             del movies[title]
 
+            for title, movie_info in movies.items():
+                movie_obj = {
+                    'title': title,
+                    'year of release': movie_info['year of release'],
+                    'rating': movie_info['rating'],
+                    'poster url': movie_info['poster url'],
+                    'notes': movie_info['notes']
+                }
+                data.append(movie_obj)
+            fieldnames = ['title', 'year of release', 'rating', 'poster url', 'notes']
             with open(self.file_path, 'w', newline='') as file:
-                writer = csv.DictWriter(file, fieldnames=movies[list(movies.keys())[0]].keys())
-                writer.writeheader()
-                writer.writerows(movies.values())
+                writer = csv.DictWriter(file, fieldnames=fieldnames)
+                for movie in data:
+                    writer.writerow(movie)
 
-            print(f'{title} successfully deleted!')
         else:
             print('This movie is not present in the database!')
 
-    def update_movie(self, title, rating=None, year=None, poster=None, notes=None):
+    def update_movie(self, title, rating):
         """
         Updates the information for a movie in the CSV file.
 
         Args:
             title (str): The title of the movie to update.
-            rating (float, optional): The updated rating of the movie.
-            year (int, optional): The updated release year of the movie.
-            poster (str, optional): The updated URL or path to the movie poster image.
-            notes (str, optional): The updated notes for the movie.
+            rating (float): The updated rating of the movie.
 
         Returns:
             None
@@ -104,14 +113,25 @@ class StorageCsv(IStorage):
         movies = self.list_movies()
 
         if title in movies:
-            movie = movies[title]
+            movies[title]['rating'] = rating
+        else:
+            print(f'{title} not in the database!')
 
-            if rating is not None:
-                movie['rating'] = rating
-            if year is not None:
-                movie['year'] = year
-            if poster is not None:
-                movie['poster'] = poster
+        data = []
+        for title, movie_info in movies.items():
+            movie_obj = {
+                'title': title,
+                'year of release': movie_info['year of release'],
+                'rating': movie_info['rating'],
+                'poster url': movie_info['poster url'],
+                'notes': movie_info['notes']
+            }
+            data.append(movie_obj)
+        fieldnames = ['title', 'year of release', 'rating', 'poster url', 'notes']
+        with open(self.file_path, 'w', newline='') as file:
+            writer = csv.DictWriter(file, fieldnames=fieldnames)
+            for movie in data:
+                writer.writerow(movie)
 
     def return_ratings(self):
         """

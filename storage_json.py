@@ -56,34 +56,29 @@ class StorageJson(IStorage):
         """
         movies = self.list_movies()
 
-        movie_to_delete = input('Which movie would you like to delete? Movie name: ')
-        if movies.get(movie_to_delete) is None:
+        if movies.get(title) is None:
             print('This movie is not present in the database!')
         else:
-            del movies[movie_to_delete]
-            print(f'{movie_to_delete} successfully deleted!')
+            del movies[title]
+            print(f'{title} successfully deleted!')
 
         with open(self.file_path, 'w') as f:
             json.dump(movies, f, indent=4)
 
-    def update_movie(self, title, rating, notes, poster):
+    def update_movie(self, title, rating):
         """
         Updates the notes for a movie in the JSON file.
 
         Args:
             title (str): The title of the movie to update.
             rating (float): The rating of the movie to update.
-            notes (str): The updated notes for the movie.
-            poster (str): The url of the movie poster.
         """
         movies = self.list_movies()
 
         if movies.get(title) is None:
             print('This movie is not present in the database!')
         else:
-            movies[title]['notes'] = notes
             movies[title]['rating'] = rating
-            movies[title]['poster'] = poster
 
         with open(self.file_path, 'w') as f:
             json.dump(movies, f, indent=4)

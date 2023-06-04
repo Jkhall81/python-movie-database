@@ -229,23 +229,30 @@ class MovieApp:
         print(f'{movie_title} successfully added to database!')
         return
 
-    def movie_update_api_call(self):
+    def update(self):
         """
-        This function prompts the user to input a movie name, that is already in the database,
-        and then runs an api call to pull the movie's plot data.  That data is then passed to
-        the update_movie method.
+        This function prompts the user to input a movie name, and rating.  If
+        the movie is in the database, then the new rating will be saved.
 
         Returns:
              None
         """
-        movie_title = input('Enter the name of a movie to update! ')
-        movie_data = self.api_call(movie_title)
-        notes = movie_data['Plot']
-        poster = movie_data['Poster']
-        rating = movie_data['imdbRating']
+        movie_title = input('Enter the name of a movie! ')
+        movie_rating = float(input('Enter a new rating! '))
+        self._storage.update_movie(movie_title, movie_rating)
+        print(f'The Rating of {movie_title} has been updated to {movie_rating}')
 
-        self._storage.update_movie(movie_title, rating, notes, poster)
-        print(f'{movie_title} successfully updated!')
+    def del_movie(self):
+        """
+        Prompts the user to enter the name of a movie to delete, then passes
+        that to the delete_movie method.
+
+        Returns:
+             None
+        """
+        movie_title = input('Please enter the name of the movie to delete! ')
+        self._storage.delete_movie(movie_title)
+        print(f'{movie_title} successfully deleted!')
 
     def api_call(self, title):
         """
@@ -289,8 +296,8 @@ class MovieApp:
         function_dict = {
             1: self._command_list_movies,
             2: self.add_movie_api_call,
-            3: self._storage.delete_movie,
-            4: self.movie_update_api_call,
+            3: self.del_movie,
+            4: self.update,
             5: self.run_stats_functions,
             6: self._command_random_movie,
             7: self._command_search_movie,

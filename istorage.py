@@ -44,15 +44,13 @@ class IStorage(ABC):
         pass
 
     @abstractmethod
-    def update_movie(self, title, rating, notes, poster):
+    def update_movie(self, title, rating):
         """
         Update the notes for a movie in the storage.
 
         Args:
             title (str): The title of the movie to update.
             rating (float): The rating of the movie to update.
-            notes (str): The updated notes for the movie.
-            poster (str): The url for the movie poster.
 
         Returns:
             None
